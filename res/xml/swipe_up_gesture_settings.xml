@@ -34,10 +34,17 @@
         app:controller="com.android.settings.gestures.SwipeUpPreferenceController"
         app:allowDividerAbove="true" />
 
+    <SwitchPreference
+        android:key="full_gesture_mode"
+        android:title="@string/full_gesture_mode_title"
+        android:summary="@string/full_gesture_mode_summary"
+        app:keywords="@string/keywords_gesture"
+        app:controller="com.android.settings.gestures.SwipeUpPreferenceController"
+        app:allowDividerAbove="true" />
+
     <com.aquarios.support.preferences.SystemSettingSwitchPreference
         android:key="use_bottom_gesture_navigation"
         android:title="@string/use_bottom_gesture_title"
         android:summary="@string/use_bottom_gesture_summary"
         android:defaultValue="false" />
-
 </PreferenceScreen>
