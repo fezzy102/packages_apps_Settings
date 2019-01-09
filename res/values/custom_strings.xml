@@ -206,5 +206,9 @@
     <string name="security_settings_fingerprint_sensor_location_front">front</string>
     <string name="security_settings_fingerprint_sensor_location_left">left side</string>
     <string name="security_settings_fingerprint_sensor_location_right">right side</string>
+    <string name="security_settings_fingerprint_sensor_location_under">Touch the dot blink to start recording your fingerprint</string>
+
+    <!-- Fingerprint under the screen location -->
+    <string name="security_settings_fingerprint_enroll_find_sensor_message_underscreen">Put your finger on the image of the fingerprint</string>
 
 </resources>
