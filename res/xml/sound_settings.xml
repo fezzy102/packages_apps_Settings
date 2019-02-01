@@ -65,7 +65,7 @@
     <!-- Ring volume -->
     <com.android.settings.notification.VolumeSeekBarPreference
         android:key="ring_volume"
-        android:icon="@drawable/ic_notifications"
+        android:icon="@drawable/ic_volume_ringer"
         android:title="@string/ring_volume_option_title"
         android:order="-160"
         settings:controller="com.android.settings.notification.RingVolumePreferenceController"/>
@@ -77,6 +77,21 @@
         android:title="@string/notification_volume_option_title"
         android:order="-150"
         settings:controller="com.android.settings.notification.NotificationVolumePreferenceController"/>
+
+    <!-- Link ringtone and notification volumes -->
+    <com.aquarios.support.preferences.SecureSettingSwitchPreference
+        android:key="volume_link_notification"
+        android:title="@string/volume_link_notification_title"
+        android:defaultValue="true"
+        android:order="-134"
+        settings:controller="com.android.settings.notification.LinkedVolumesPreferenceController"/>
+
+    <!-- Also vibrate for calls -->
+    <SwitchPreference
+        android:key="vibrate_when_ringing"
+        android:title="@string/vibrate_when_ringing_title"
+        settings:controller="com.android.settings.notification.VibrateWhenRingPreferenceController"
+        android:order="-130"/>
 
     <!-- Increasing ring -->
     <com.aquarios.support.preferences.SystemSettingSwitchPreference
@@ -93,21 +108,6 @@
         android:dependency="increasing_ring"
         android:order="-135"
         settings:controller="com.android.settings.notification.IncreasingRingVolumePreferenceController" />
-
-    <!-- Link ringtone and notification volumes -->
-    <com.aquarios.support.preferences.SecureSettingSwitchPreference
-        android:key="volume_link_notification"
-        android:title="@string/volume_link_notification_title"
-        android:defaultValue="true"
-        android:order="-134"
-        settings:controller="com.android.settings.notification.LinkedVolumesPreferenceController"/>
-
-    <!-- Also vibrate for calls -->
-    <SwitchPreference
-        android:key="vibrate_when_ringing"
-        android:title="@string/vibrate_when_ringing_title"
-        settings:controller="com.android.settings.notification.VibrateWhenRingPreferenceController"
-        android:order="-130"/>
 
     <!-- Interruptions -->
     <com.android.settingslib.RestrictedPreference

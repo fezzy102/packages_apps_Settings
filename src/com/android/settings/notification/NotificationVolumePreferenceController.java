@@ -16,36 +16,82 @@
 
 package com.android.settings.notification;
 
+import android.app.NotificationManager;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Vibrator;
 import android.text.TextUtils;
 
 import com.android.settings.R;
 import com.android.settings.Utils;
+import com.android.settingslib.core.lifecycle.Lifecycle;
 
-public class NotificationVolumePreferenceController extends
-    RingVolumePreferenceController {
+import java.util.Objects;
 
+public class NotificationVolumePreferenceController  extends VolumeSeekBarPreferenceController {
+
+    private static final String TAG = "NotificationVolumeController";
     private static final String KEY_NOTIFICATION_VOLUME = "notification_volume";
 
+    private Vibrator mVibrator;
+    private int mNotificationMode = -1;
+    private ComponentName mSuppressor;
+    private final RingReceiver mReceiver = new RingReceiver();
+    private final H mHandler = new H();
+
+    private int mMuteIcon;
+
     public NotificationVolumePreferenceController(Context context) {
-        super(context, KEY_NOTIFICATION_VOLUME);
+        this(context, KEY_NOTIFICATION_VOLUME);
     }
 
-    @Override
-    public int getAvailabilityStatus() {
-        return mContext.getResources().getBoolean(R.bool.config_show_notification_volume)
-                && !mHelper.isSingleVolume() ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
+    public NotificationVolumePreferenceController(Context context, String key) {
+        super(context, key);
+        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        if (mVibrator != null && !mVibrator.hasVibrator()) {
+            mVibrator = null;
+        }
+        updateNotificationMode();
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @Override
-    public boolean isSliceable() {
-        return TextUtils.equals(getPreferenceKey(), KEY_NOTIFICATION_VOLUME);
+    public void onResume() {
+        super.onResume();
+        mReceiver.register(true);
+        updateEffectsSuppressor();
+        updatePreferenceIcon();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    @Override
+    public void onPause() {
+        super.onPause();
+        mReceiver.register(false);
     }
 
     @Override
     public String getPreferenceKey() {
         return KEY_NOTIFICATION_VOLUME;
+    }
+
+    @Override
+    public int getAvailabilityStatus() {
+        return Utils.isVoiceCapable(mContext) && !mHelper.isSingleVolume()
+                ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
+    }
+
+    @Override
+    public boolean isSliceable() {
+        return TextUtils.equals(getPreferenceKey(), KEY_NOTIFICATION_VOLUME);
     }
 
     @Override
@@ -55,7 +101,87 @@ public class NotificationVolumePreferenceController extends
 
     @Override
     public int getMuteIcon() {
-        return R.drawable.ic_notifications_off_24dp;
+        return mMuteIcon;
+    }
+
+    private void updateNotificationMode() {
+        final int notificationMode = mHelper.getRingerModeInternal();
+        if (mNotificationMode == notificationMode) return;
+        mNotificationMode = notificationMode;
+        updatePreferenceIcon();
+    }
+
+    private void updateEffectsSuppressor() {
+        final ComponentName suppressor = NotificationManager.from(mContext).getEffectsSuppressor();
+        if (Objects.equals(suppressor, mSuppressor)) return;
+        mSuppressor = suppressor;
+        if (mPreference != null) {
+            final String text = SuppressorHelper.getSuppressionText(mContext, suppressor);
+            mPreference.setSuppressionText(text);
+        }
+        updatePreferenceIcon();
+    }
+
+    private void updatePreferenceIcon() {
+        if (mPreference != null) {
+            if (mNotificationMode == AudioManager.RINGER_MODE_VIBRATE) {
+                mMuteIcon = R.drawable.ic_volume_notification_vibrate;
+                mPreference.showIcon(R.drawable.ic_volume_ringer_vibrate);
+            } else if (mNotificationMode == AudioManager.RINGER_MODE_SILENT) {
+                mMuteIcon = R.drawable.ic_notifications_off_24dp;
+                mPreference.showIcon(R.drawable.ic_notifications_off_24dp);
+            } else {
+                mPreference.showIcon(R.drawable.ic_notifications);
+            }
+        }
+    }
+
+    private final class H extends Handler {
+        private static final int UPDATE_EFFECTS_SUPPRESSOR = 1;
+        private static final int UPDATE_RINGER_MODE = 2;
+
+        private H() {
+            super(Looper.getMainLooper());
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_EFFECTS_SUPPRESSOR:
+                    updateEffectsSuppressor();
+                    break;
+                case UPDATE_RINGER_MODE:
+                    updateNotificationMode();
+                    break;
+            }
+        }
+    }
+
+    private class RingReceiver extends BroadcastReceiver {
+        private boolean mRegistered;
+
+        public void register(boolean register) {
+            if (mRegistered == register) return;
+            if (register) {
+                final IntentFilter filter = new IntentFilter();
+                filter.addAction(NotificationManager.ACTION_EFFECTS_SUPPRESSOR_CHANGED);
+                filter.addAction(AudioManager.INTERNAL_RINGER_MODE_CHANGED_ACTION);
+                mContext.registerReceiver(this, filter);
+            } else {
+                mContext.unregisterReceiver(this);
+            }
+            mRegistered = register;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (NotificationManager.ACTION_EFFECTS_SUPPRESSOR_CHANGED.equals(action)) {
+                mHandler.sendEmptyMessage(H.UPDATE_EFFECTS_SUPPRESSOR);
+            } else if (AudioManager.INTERNAL_RINGER_MODE_CHANGED_ACTION.equals(action)) {
+                mHandler.sendEmptyMessage(H.UPDATE_RINGER_MODE);
+            }
+        }
     }
 
 }
