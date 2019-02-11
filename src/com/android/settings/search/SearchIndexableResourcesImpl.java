@@ -97,7 +97,9 @@ import com.android.settings.wallpaper.WallpaperTypeSettings;
 import com.android.settings.wfd.WifiDisplaySettings;
 import com.android.settings.wifi.ConfigureWifiSettings;
 import com.android.settings.wifi.WifiSettings;
+import com.aquarios.coralreef.fragments.ActiveEdge;
 import com.aquarios.coralreef.fragments.GestureOptions;
+
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -193,6 +195,9 @@ public class SearchIndexableResourcesImpl implements SearchIndexableResources {
         addIndex(RecentLocationRequestSeeAllFragment.class);
         addIndex(PreviouslyConnectedDeviceDashboardFragment.class);
         addIndex(BluetoothDashboardFragment.class);
+
+        // CoralReef
+        addIndex(ActiveEdge.class);
     }
 
     @Override
