@@ -60,6 +60,7 @@ import com.android.settings.gestures.DoubleTapPowerSettings;
 import com.android.settings.gestures.DoubleTapScreenSettings;
 import com.android.settings.gestures.DoubleTwistGestureSettings;
 import com.android.settings.gestures.SwipeUpGestureSettings;
+import com.android.settings.gestures.GestureSettings;
 import com.android.settings.gestures.PickupGestureSettings;
 import com.android.settings.gestures.SwipeToNotificationSettings;
 import com.android.settings.inputmethod.AvailableVirtualKeyboardFragment;
@@ -97,7 +98,6 @@ import com.android.settings.wallpaper.WallpaperTypeSettings;
 import com.android.settings.wfd.WifiDisplaySettings;
 import com.android.settings.wifi.ConfigureWifiSettings;
 import com.android.settings.wifi.WifiSettings;
-import com.aquarios.coralreef.fragments.GestureOptions;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -140,7 +140,7 @@ public class SearchIndexableResourcesImpl implements SearchIndexableResources {
         addIndex(DoubleTwistGestureSettings.class);
         addIndex(SwipeUpGestureSettings.class);
         addIndex(SwipeToNotificationSettings.class);
-        addIndex(GestureOptions.class);
+        addIndex(GestureSettings.class);
         addIndex(LanguageAndInputSettings.class);
         addIndex(LocationSettings.class);
         addIndex(ScanningSettings.class);
