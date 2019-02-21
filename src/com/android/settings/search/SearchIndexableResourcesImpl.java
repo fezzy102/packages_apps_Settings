@@ -100,6 +100,10 @@ import com.android.settings.wifi.ConfigureWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 
 // AquariOS fragments
+import com.android.settings.smartnav.FlingSettings;
+import com.android.settings.smartnav.PulseSettings;
+import com.android.settings.smartnav.SmartbarSettings;
+import com.android.settings.smartnav.NavigationBarSettings;
 import com.aquarios.coralreef.fragments.ActiveEdge;
 import com.aquarios.coralreef.fragments.AudioDisplayOptions;
 import com.aquarios.coralreef.fragments.AudioPanel;
@@ -238,6 +242,10 @@ public class SearchIndexableResourcesImpl implements SearchIndexableResources {
         addIndex(TrafficIndicators.class);
         addIndex(VolumeRocker.class);
         addIndex(VolumeSteps.class);
+        addIndex(FlingSettings.class);
+        addIndex(NavigationBarSettings.class);
+        addIndex(PulseSettings.class);
+        addIndex(SmartbarSettings.class);
     }
 
     @Override
