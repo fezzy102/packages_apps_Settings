@@ -105,7 +105,6 @@ import com.android.settings.smartnav.FlingSettings;
 import com.android.settings.smartnav.PulseSettings;
 import com.android.settings.smartnav.SmartbarSettings;
 import com.android.settings.smartnav.NavigationBarSettings;
-import com.aquarios.coralreef.fragments.ActiveEdge;
 import com.aquarios.coralreef.fragments.AudioDisplayOptions;
 import com.aquarios.coralreef.fragments.AudioPanel;
 import com.aquarios.coralreef.fragments.BatteryOptions;
