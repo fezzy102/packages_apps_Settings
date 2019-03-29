@@ -21,6 +21,7 @@ LOCAL_USE_AAPT2 := true
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_SRC_FILES += $(call all-java-files-under, ../CoralReef/src)
 LOCAL_SRC_FILES += $(call all-java-files-under, ../SmartNavSettings/src)
+LOCAL_SRC_FILES += $(call all-java-files-under, ../../../external/google/settings/src)
 
 LOCAL_STATIC_ANDROID_LIBRARIES := \
     android-slices-builders \
@@ -51,7 +52,8 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
     frameworks/support/v7/cardview/res \
     packages/apps/CoralReef/res \
-    packages/apps/SmartNavSettings/res
+    packages/apps/SmartNavSettings/res \
+    external/google/settings/res
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
